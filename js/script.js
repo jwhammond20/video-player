@@ -1,16 +1,19 @@
+// Define API key and playlist ID
 const apiKey = "AIzaSyDiRqzcOWvgk5XTdtpi-tWq0CYLp_ZONZo";
 const playlistId = "PL-nKWS2MEWvoSBGGuGSclXwpHzSERR6bK";
 
+// Construct API endpoint URL with query parameters
 const apiUrl = "https://www.googleapis.com/youtube/v3/playlistItems";
 const queryParams = `?part=snippet&maxResults=10&playlistId=${playlistId}&key=${apiKey}`;
 
+// Make API request to retrieve video data
 fetch(apiUrl + queryParams)
   .then((response) => response.json())
   .then((data) => {
+    // Process video data into an array of objects with relevant properties
     const videoArray = data.items
       .map((item) => {
         const feedTitle = item.snippet.title;
-        /* const feedDesc = item.snippet.description; */
         const videoID = item.snippet.resourceId.videoId;
         if (
           feedTitle.toLowerCase() !== "private video" &&
@@ -27,6 +30,7 @@ fetch(apiUrl + queryParams)
       })
       .filter((video) => video !== null);
 
+    // Add video list items to the DOM and set click event listeners to switch main video
     const videoList = document.getElementById("video-list");
     videoArray.forEach((video, index) => {
       const isActive = index === 0 ? "active" : "";
@@ -54,7 +58,7 @@ fetch(apiUrl + queryParams)
       };
     });
 
-    // Set main video properties based on first video
+    // Set main video properties based on first video in array
     const firstVideo = videoArray[0];
     document.querySelector(".main-video-container .main-video").src =
       firstVideo.url;
